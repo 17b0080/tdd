@@ -7,8 +7,6 @@ const entries = sync(entriesReg).reduce((pV, cV) => {
   return Object.assign(pV, {
     [entryName]: './' + join('src', 'entries', basename(cV))
   })
-}, {})
-
-console.log('ENTRIES: ', entries)
+}, {});
 
 export default entries;
