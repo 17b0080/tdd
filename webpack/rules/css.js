@@ -13,7 +13,7 @@ export default {
       loader: 'postcss-loader', // sass, minimizations, full paths
       options: {
         config: {
-          path: './config'
+          path: configDir
         }
       }
     },
