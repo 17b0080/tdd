@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production --config ./webpack/webpack.prod.babel.js --require @babel/register",
-    "watch": "webpack-dev-server --mode development --config ./webpack/webpack.dev.babel.js --require @babel/register"
+    "develop": "webpack-dev-server --mode development --config ./webpack/webpack.dev.babel.js --require @babel/register"
   },
   "keywords": [],
   "author": "",
@@ -70,9 +70,6 @@
     "webpack-shell-plugin": "^0.5.0"
   },
   "dependencies": {
-    "@apollo/react-hooks": "^3.0.1",
-    "apollo-boost": "^0.4.4",
-    "graphql": "^14.4.2",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
