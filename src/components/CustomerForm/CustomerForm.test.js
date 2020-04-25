@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTestUtils, { act } from 'react-dom/test-utils';
 import { createContainer } from '../../helpers/domManipulators';
-import { fetchResponseOk, fetchResponseError } from '../../helpers/spy';
+import { fetchResponseOk, fetchResponseError, fetchRequestBody } from '../../helpers/spy';
 import { CustomerForm } from './CustomerForm';
 
 const expectToBeInputFieldOfTypeText = formElement => {
@@ -21,7 +21,6 @@ describe('CustomerForm', () => {
   afterEach(() => {
     window.fetch = originalFetch;
   });
-  const fetchRequestBody = () => JSON.parse(fetchSpy.mock.calls[0][1].body);
   const form = id => container.querySelector(`form[id="${id}"]`);
   const field = name => form('customer').elements[name];
   const labelFor = formElement => {
