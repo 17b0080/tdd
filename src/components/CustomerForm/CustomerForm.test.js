@@ -1,25 +1,13 @@
 import React from 'react';
 import ReactTestUtils, { act } from 'react-dom/test-utils';
 import { createContainer } from '../../helpers/domManipulators';
+import { fetchResponseOk, fetchResponseError } from '../../helpers/spy';
 import { CustomerForm } from './CustomerForm';
 
 const expectToBeInputFieldOfTypeText = formElement => {
   expect(formElement).not.toBeNull();
   expect(formElement.tagName).toEqual('INPUT');
   expect(formElement.type).toEqual('text');
-};
-
-
-// mimic the fetch res
-const fetchResponseOk = body => {
-  return Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve(body)
-  });
-};
-
-const fetchResponseError = () => {
-  return Promise.resolve({ ok: false });
 };
 
 describe('CustomerForm', () => {
