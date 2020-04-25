@@ -1,7 +1,3 @@
-src/pages/index.html
-src/etries/index.jsx
-src/components/SampleComponent
-src/helpers/domManipulators.js
 yarn-error.log
 /node_modules
 .DS_Store
