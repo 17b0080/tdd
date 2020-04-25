@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTestUtils, { act } from 'react-dom/test-utils';
 import { createContainer } from '../../helpers/domManipulators';
-import { fetchResponseOk, fetchResponseError, fetchRequestBody } from '../../helpers/spy';
+import { fetchResponseOk, fetchResponseError, requestBodyOf } from '../../helpers/spy';
 import { CustomerForm } from './CustomerForm';
 
 const expectToBeInputFieldOfTypeText = formElement => {
@@ -61,7 +61,7 @@ describe('CustomerForm', () => {
       render(<CustomerForm {...{ [fieldName]: 'value' }} />);
       await ReactTestUtils.Simulate.submit(form('customer'));
 
-      expect(fetchRequestBody()).toMatchObject({ [fieldName]: 'value' });
+      expect(requestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: 'value' });
 
       // const fetchOpts = fetchSpy.receivedArgument(1);
       // expect(JSON.parse(fetchOpts.body)[fieldName]).toEqual('value');
@@ -81,7 +81,7 @@ describe('CustomerForm', () => {
         })
       await ReactTestUtils.Simulate.submit(form('customer'));
 
-      expect(fetchRequestBody()).toMatchObject({ [fieldName]: 'newValue' });
+      expect(requestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: 'newValue' });
     });
   };
 
