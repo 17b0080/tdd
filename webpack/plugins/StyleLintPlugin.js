@@ -3,5 +3,6 @@ import { configDir } from '../settings';
 import { join } from 'path';
 export default new StyleLintPlugin({
   fix: true,
+  lintDirtyModulesOnly: true,
   configFile: join(configDir, 'stylelint.config.js')
 })
