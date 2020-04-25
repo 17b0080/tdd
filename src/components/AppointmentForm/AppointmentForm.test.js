@@ -12,11 +12,6 @@ describe('AppointmentForm', () => {
   const field = name => form('appointment').elements[name];
   const timeSlotTable = () => container.querySelector('table#time-slots');
 
-  it('renders a form', () => {
-    render(<AppointmentForm />);
-    expect(form('appointment')).not.toBeNull();
-  });
-
   const itRendersAsASelectBox = fieldName => {
     return it('renders as a select box', () => {
       render(<AppointmentForm />);
@@ -108,6 +103,11 @@ describe('AppointmentForm', () => {
       await ReactTestUtils.Simulate.submit(form('appointment'));
     });
   };
+
+  it('renders a form', () => {
+    render(<AppointmentForm />);
+    expect(form('appointment')).not.toBeNull();
+  });
 
   describe('service field', () => {
     itRendersAsASelectBox('service');
