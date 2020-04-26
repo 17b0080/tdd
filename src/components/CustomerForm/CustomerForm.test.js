@@ -13,31 +13,24 @@ const expectToBeInputFieldOfTypeText = formElement => {
 
 describe('CustomerForm', () => {
   // const originalFetch = window.fetch;
-  let render, container, fetchSpy;
+  let render, container, form, field, labelFor;
   beforeEach(() => {
-    ({ render, container } = createContainer());
-    // fetchSpy = jest.fn(() => fetchResponseOk());
+    ({ render, container, form, field, labelFor, } = createContainer());
     jest.spyOn(window, 'fetch').mockReturnValue(fetchResponseOk())
   });
   afterEach(() => {
-    // window.fetch = originalFetch;
     window.fetch.mockRestore();
   });
-  const form = id => container.querySelector(`form[id="${id}"]`);
-  const field = name => form('customer').elements[name];
-  const labelFor = formElement => {
-    return container.querySelector(`label[for="${formElement}"]`);
-  };
   const itRendersAsATextBox = fieldName => {
     return it('renders as a text box', () => {
       render(<CustomerForm />);
-      expectToBeInputFieldOfTypeText(field(fieldName));
+      expectToBeInputFieldOfTypeText(field('customer', fieldName));
     });
   };
   const itIncludesTheExistingValue = fieldName => {
     return it('includes the existing value', () => {
       render(<CustomerForm {...{ [fieldName]: 'value' }} />);
-      expect(field(fieldName).value).toEqual('value');
+      expect(field('customer', fieldName).value).toEqual('value');
     });
   };
   const itRendersALabel = (fieldName, labelText) => {
@@ -50,7 +43,7 @@ describe('CustomerForm', () => {
   const itAssignsAnIdThatMatchesTheLabelId = fieldName => {
     return it('assigns an id that matches the label id', () => {
       render(<CustomerForm {...{ [fieldName]: 'value' }} />);
-      expect(field(fieldName).id).toEqual(fieldName);
+      expect(field('customer', fieldName).id).toEqual(fieldName);
     });
   };
   const itSubmitsExistingValue = fieldName => {
@@ -79,7 +72,7 @@ describe('CustomerForm', () => {
       expect.hasAssertions();
 
       render(<CustomerForm {...{ [fieldName]: 'existingValue' }} />);
-      await ReactTestUtils.Simulate.change(field(fieldName), {
+      await ReactTestUtils.Simulate.change(field('customer', fieldName), {
           target: { value: 'newValue', name: fieldName }
         })
       await ReactTestUtils.Simulate.submit(form('customer'));

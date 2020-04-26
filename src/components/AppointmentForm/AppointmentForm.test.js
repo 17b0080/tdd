@@ -4,25 +4,23 @@ import { createContainer } from '../../helpers/domManipulators';
 import { AppointmentForm } from './AppointmentForm';
 
 describe('AppointmentForm', () => {
-  let render, container;
+  let render, container, form, field, labelFor;
   beforeEach(() => {
-    ({ render, container } = createContainer());
+    ({ render, container, form, field, labelFor, } = createContainer());
   });
-  const form = id => container.querySelector(`form[id="${id}"]`);
-  const field = name => form('appointment').elements[name];
   const timeSlotTable = () => container.querySelector('table#time-slots');
 
   const itRendersAsASelectBox = fieldName => {
     return it('renders as a select box', () => {
       render(<AppointmentForm />);
-      expect(field(fieldName)).not.toBeNull();
-      expect(field(fieldName).tagName).toEqual('SELECT');
+      expect(field('appointment', fieldName)).not.toBeNull();
+      expect(field('appointment', fieldName).tagName).toEqual('SELECT');
     });
   };
   const itInitiallyHasABlankValueChosen = fieldName => {
     return it('initially has a blank value chosen', () => {
       render(<AppointmentForm />);
-      const firstNode = field(fieldName).childNodes[0];
+      const firstNode = field('appointment', fieldName).childNodes[0];
       expect(firstNode.value).toEqual('');
       expect(firstNode.selected).toBeTruthy();
     });
@@ -32,7 +30,7 @@ describe('AppointmentForm', () => {
       const propName = `selectable${fieldName.charAt(0).toUpperCase() +
         fieldName.substring(1)}s`;
       render(<AppointmentForm {...{ [propName]: selectableOptions }} />);
-      const optionNodes = Array.from(field(fieldName).childNodes);
+      const optionNodes = Array.from(field('appointment', fieldName).childNodes);
       const renderedServices = optionNodes.map(node => node.text);
       // «The toEqual matcher, when applied to arrays,
       // will check that each array has the same number
@@ -97,7 +95,7 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await ReactTestUtils.Simulate.change(field(fieldName), {
+      await ReactTestUtils.Simulate.change(field('appointment', fieldName), {
         target: { value }
       });
       await ReactTestUtils.Simulate.submit(form('appointment'));
@@ -140,7 +138,7 @@ describe('AppointmentForm', () => {
         { name: 'Kyle', services: ['Blow-dry'] }
       ];
       render(<AppointmentForm selectableStylists={selectableStylists} />);
-      const optionNodes = Array.from(field('stylist').childNodes);
+      const optionNodes = Array.from(field('appointment', 'stylist').childNodes);
       const renderedStylists = optionNodes.map(node => node.text);
       expect(renderedStylists).toEqual(
         expect.arrayContaining(selectableStylists.map(({ name }) => name))
@@ -177,7 +175,7 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await ReactTestUtils.Simulate.change(field('stylist'), {
+      await ReactTestUtils.Simulate.change(field('appointment', 'stylist'), {
         target: { value: stylistToSelect }
       });
       await ReactTestUtils.Simulate.submit(form('appointment'));
@@ -280,7 +278,7 @@ describe('AppointmentForm', () => {
           selectableStylists={selectableStylists}
         />
       );
-      const optionNodes = Array.from(field('stylist').childNodes);
+      const optionNodes = Array.from(field('appointment', 'stylist').childNodes);
       const renderedStylists = optionNodes.map(node => node.text);
       expect(renderedStylists).toEqual(['', 'Jhon']);
     });
