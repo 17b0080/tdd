@@ -1,10 +1,9 @@
 // red -> green -> refactor
 // to.skip(red) -> green ;)
 import React from 'react';
-import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-
 import { Appointment, AppointmentsDayView } from './AppointmentsDayView';
+import { createContainer } from '../../helpers/domManipulators';
 /**
  * A good test has three distinct sections:
  * 1. Arrange: Sets up test dependencies,
@@ -21,13 +20,12 @@ import { Appointment, AppointmentsDayView } from './AppointmentsDayView';
  */
 
 describe('Appointment', () => {
-  let container;
+  let container, render;
   let customer;
   let stylist;
   let notes;
-  const render = component => ReactDOM.render(component, container);
   beforeEach(() => {
-    container = document.createElement('div');
+    ({ container, render } = createContainer());
   });
   // never use shared state (document) in unit tests
   it('renders customer first name', () => {
@@ -95,7 +93,7 @@ describe('Appointment', () => {
 });
 
 describe('AppointmentsDayView', () => {
-  let container;
+  let render, container, element, elements;
   const today = new Date();
   const appointments = [
     {
@@ -109,24 +107,23 @@ describe('AppointmentsDayView', () => {
       stylist: ''
     }
   ];
-  const render = component => ReactDOM.render(component, container);
   beforeEach(() => {
-    container = document.createElement('div');
+    ({ render, container, element, elements } = createContainer())
   });
   it('renders a div with the right id', () => {
     render(<AppointmentsDayView appointments={appointments} />);
-    expect(container.querySelector('div#appointmentsDayView')).not.toBeNull();
+    expect(element('div#appointmentsDayView')).not.toBeNull();
   });
   it('renders multiple appointments in ol element', () => {
     render(<AppointmentsDayView appointments={appointments} />);
-    expect(container.querySelector('ol')).not.toBeNull();
-    expect(container.querySelector('ol').children).toHaveLength(2);
+    expect(element('ol')).not.toBeNull();
+    expect(element('ol').children).toHaveLength(2);
   });
   it('renders each appointment in li element', () => {
     render(<AppointmentsDayView appointments={appointments} />);
-    expect(container.querySelectorAll('li')).toHaveLength(2);
-    expect(container.querySelectorAll('li')[0].textContent).toEqual('12:00');
-    expect(container.querySelectorAll('li')[1].textContent).toEqual('13:00');
+    expect(elements('li')).toHaveLength(2);
+    expect(elements('li')[0].textContent).toEqual('12:00');
+    expect(elements('li')[1].textContent).toEqual('13:00');
   });
   it('initially shows a message saying there are no appointments today', () => {
     render(<AppointmentsDayView appointments={[]} />);
@@ -140,12 +137,12 @@ describe('AppointmentsDayView', () => {
   });
   it('has a button element in each li', () => {
     render(<AppointmentsDayView appointments={appointments} />);
-    expect(container.querySelectorAll('li')).toHaveLength(2);
-    expect(container.querySelectorAll('li > button')[0].type).toEqual('button');
+    expect(elements('li')).toHaveLength(2);
+    expect(elements('li > button')[0].type).toEqual('button');
   });
   it('renders another appointment when selected', () => {
     render(<AppointmentsDayView appointments={appointments} />);
-    const button = container.querySelectorAll('li > button')[1];
+    const button = elements('li > button')[1];
     ReactTestUtils.Simulate.click(button);
     expect(container.textContent).toMatch('Jordan');
   });

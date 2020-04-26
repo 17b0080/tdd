@@ -15,7 +15,7 @@ describe('CustomerForm', () => {
   // const originalFetch = window.fetch;
   let render, container, form, field, labelFor, element;
   beforeEach(() => {
-    ({ render, container, form, field, labelFor, element, } = createContainer());
+    ({ render, container, form, field, labelFor, element } = createContainer());
     jest.spyOn(window, 'fetch').mockReturnValue(fetchResponseOk())
   });
   afterEach(() => {
@@ -56,15 +56,7 @@ describe('CustomerForm', () => {
       render(<CustomerForm {...{ [fieldName]: 'value' }} />);
       await ReactTestUtils.Simulate.submit(form('customer'));
 
-      // expect(requestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: 'value' });
       expect(requestBodyOf(window.fetch)).toMatchObject({ [fieldName]: 'value' });
-
-      // const fetchOpts = fetchSpy.receivedArgument(1);
-      // expect(JSON.parse(fetchOpts.body)[fieldName]).toEqual('value');
-      // expect(fetchSpy).toHaveBeenCalledWith(expect.anything(), )
-
-      // expect(fetchSpy).toHaveBeenCalled();
-      // expect(fetchSpy.receivedArgument(0)[fieldName]).toBe('value');
     });
   };
   const itSubmitsNewValue = fieldName => {
@@ -123,15 +115,6 @@ describe('CustomerForm', () => {
     render(<CustomerForm />);
     ReactTestUtils.Simulate.submit(form('customer'));
 
-    // expect(fetchSpy).toHaveBeenCalled();
-    // expect(fetchSpy).toHaveBeenCalledWith(
-    //   '/customers',
-    //   expect.objectContaining({
-    //     method: 'POST',
-    //     credentials: 'same-origin',
-    //     headers: { 'Content-Type': 'application/json' }
-    //   })
-    // );
     expect(window.fetch).toHaveBeenCalled();
     expect(window.fetch).toHaveBeenCalledWith(
       '/customers',

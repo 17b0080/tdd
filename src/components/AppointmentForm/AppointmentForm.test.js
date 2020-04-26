@@ -4,9 +4,9 @@ import { createContainer } from '../../helpers/domManipulators';
 import { AppointmentForm } from './AppointmentForm';
 
 describe('AppointmentForm', () => {
-  let render, container, form, field, labelFor, element;
+  let render, container, form, field, labelFor, element, elements;
   beforeEach(() => {
-    ({ render, container, form, field, labelFor, element } = createContainer());
+    ({ render, container, form, field, labelFor, element, elements } = createContainer());
   });
   const timeSlotTable = () => element('table#time-slots');
 
@@ -180,7 +180,7 @@ describe('AppointmentForm', () => {
   });
 
   const startsAtField = index =>
-    container.querySelectorAll('input[name="startsAt"]')[index];
+    elements('input[name="startsAt"]')[index];
 
   describe('time slot table', () => {
     it('renders a table for time slots', () => {
