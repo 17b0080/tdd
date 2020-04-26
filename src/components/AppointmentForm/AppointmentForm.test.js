@@ -1,5 +1,5 @@
 import React from 'react';
-import { createContainer } from '../../helpers/domManipulators';
+import { createContainer, withEvent } from '../../helpers/domManipulators';
 import { AppointmentForm } from './AppointmentForm';
 
 describe('AppointmentForm', () => {
@@ -91,7 +91,7 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await change(field('appointment', fieldName), { target: { value } });
+      await change(field('appointment', fieldName), withEvent(fieldName, value));
       await submit(form('appointment'));
     });
   };
@@ -169,7 +169,7 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await change(field('appointment', 'stylist'), { target: { value: stylistToSelect } });
+      await change(field('appointment', 'stylist'), withEvent(null, stylistToSelect));
       await submit(form('appointment'));
     });
   });
@@ -382,7 +382,7 @@ describe('AppointmentForm', () => {
             }
           />
         );
-        await change(startsAtField(1), { target: { value: newlySelectedTimeSlot } });
+        await change(startsAtField(1), withEvent(null, newlySelectedTimeSlot) );
         expect(startsAtField(0).checked).not.toBeTruthy();
         await submit(form('appointment'));
       });

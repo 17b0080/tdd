@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 import React from 'react';
-import { createContainer } from '../../helpers/domManipulators';
+import { createContainer, withEvent } from '../../helpers/domManipulators';
 import { fetchResponseOk, fetchResponseError, requestBodyOf } from '../../helpers/spy';
 import { CustomerForm } from './CustomerForm';
 
@@ -12,9 +12,9 @@ const expectToBeInputFieldOfTypeText = formElement => {
 
 describe('CustomerForm', () => {
   // const originalFetch = window.fetch;
-  let render, container, form, field, labelFor, element, click, change, submit;
+  let render, form, field, labelFor, element, change, submit;
   beforeEach(() => {
-    ({ render, container, form, field, labelFor, element, click, change, submit } = createContainer());
+    ({ render, form, field, labelFor, element, change, submit } = createContainer());
     jest.spyOn(window, 'fetch').mockReturnValue(fetchResponseOk())
   });
   afterEach(() => {
@@ -63,12 +63,7 @@ describe('CustomerForm', () => {
       expect.hasAssertions();
 
       render(<CustomerForm {...{ [fieldName]: 'existingValue' }} />);
-      change(
-        field('customer', fieldName),
-        {
-          target: { value: 'newValue', name: fieldName }
-        }
-      );
+      change(field('customer', fieldName), withEvent(fieldName, 'newValue'));
       await submit(form('customer'));
 
       // expect(requestBodyOf(fetchSpy)).toMatchObject({ [fieldName]: 'newValue' });
