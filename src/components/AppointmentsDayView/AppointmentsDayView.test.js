@@ -1,7 +1,6 @@
 // red -> green -> refactor
 // to.skip(red) -> green ;)
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
 import { Appointment, AppointmentsDayView } from './AppointmentsDayView';
 import { createContainer } from '../../helpers/domManipulators';
 /**
@@ -93,7 +92,7 @@ describe('Appointment', () => {
 });
 
 describe('AppointmentsDayView', () => {
-  let render, container, element, elements;
+  let render, container, element, elements, click;
   const today = new Date();
   const appointments = [
     {
@@ -108,7 +107,7 @@ describe('AppointmentsDayView', () => {
     }
   ];
   beforeEach(() => {
-    ({ render, container, element, elements } = createContainer())
+    ({ render, container, element, elements, click } = createContainer())
   });
   it('renders a div with the right id', () => {
     render(<AppointmentsDayView appointments={appointments} />);
@@ -143,7 +142,7 @@ describe('AppointmentsDayView', () => {
   it('renders another appointment when selected', () => {
     render(<AppointmentsDayView appointments={appointments} />);
     const button = elements('li > button')[1];
-    ReactTestUtils.Simulate.click(button);
+    click(button);
     expect(container.textContent).toMatch('Jordan');
   });
   it('renders selected appointment time', () => {

@@ -1,12 +1,11 @@
 import React from 'react';
-import ReactTestUtils from 'react-dom/test-utils';
 import { createContainer } from '../../helpers/domManipulators';
 import { AppointmentForm } from './AppointmentForm';
 
 describe('AppointmentForm', () => {
-  let render, container, form, field, labelFor, element, elements;
+  let render, form, field, labelFor, element, elements, submit, change;
   beforeEach(() => {
-    ({ render, container, form, field, labelFor, element, elements } = createContainer());
+    ({ render, form, field, labelFor, element, elements, submit, change } = createContainer());
   });
   const timeSlotTable = () => element('table#time-slots');
 
@@ -73,7 +72,7 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await ReactTestUtils.Simulate.submit(form('appointment'));
+      await submit(form('appointment'));
     });
   };
   const itSubmitsNewValue = (fieldName, selectableOptions, value) => {
@@ -92,10 +91,8 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await ReactTestUtils.Simulate.change(field('appointment', fieldName), {
-        target: { value }
-      });
-      await ReactTestUtils.Simulate.submit(form('appointment'));
+      await change(field('appointment', fieldName), { target: { value } });
+      await submit(form('appointment'));
     });
   };
 
@@ -153,7 +150,7 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await ReactTestUtils.Simulate.submit(form('appointment'));
+      await submit(form('appointment'));
     });
     it('submits new value', async () => {
       expect.hasAssertions();
@@ -172,10 +169,8 @@ describe('AppointmentForm', () => {
           }}
         />
       );
-      await ReactTestUtils.Simulate.change(field('appointment', 'stylist'), {
-        target: { value: stylistToSelect }
-      });
-      await ReactTestUtils.Simulate.submit(form('appointment'));
+      await change(field('appointment', 'stylist'), { target: { value: stylistToSelect } });
+      await submit(form('appointment'));
     });
   });
 
@@ -360,7 +355,7 @@ describe('AppointmentForm', () => {
             }
           />
         );
-        await ReactTestUtils.Simulate.submit(form('appointment'));
+        await submit(form('appointment'));
       });
       it('submits new value', async () => {
         expect.hasAssertions();
@@ -387,11 +382,9 @@ describe('AppointmentForm', () => {
             }
           />
         );
-        await ReactTestUtils.Simulate.change(startsAtField(1), {
-          target: { value: newlySelectedTimeSlot }
-        });
+        await change(startsAtField(1), { target: { value: newlySelectedTimeSlot } });
         expect(startsAtField(0).checked).not.toBeTruthy();
-        await ReactTestUtils.Simulate.submit(form('appointment'));
+        await submit(form('appointment'));
       });
     });
   });
