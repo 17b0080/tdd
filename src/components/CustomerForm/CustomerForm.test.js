@@ -13,9 +13,9 @@ const expectToBeInputFieldOfTypeText = formElement => {
 
 describe('CustomerForm', () => {
   // const originalFetch = window.fetch;
-  let render, container, form, field, labelFor;
+  let render, container, form, field, labelFor, element;
   beforeEach(() => {
-    ({ render, container, form, field, labelFor, } = createContainer());
+    ({ render, container, form, field, labelFor, element, } = createContainer());
     jest.spyOn(window, 'fetch').mockReturnValue(fetchResponseOk())
   });
   afterEach(() => {
@@ -116,8 +116,7 @@ describe('CustomerForm', () => {
 
   it('has a submit button', () => {
     render(<CustomerForm />);
-    const submitButton = container.querySelector('input[type="submit"]');
-    expect(submitButton).not.toBeNull();
+    expect(element('input[type="submit"]')).not.toBeNull();
   });
 
   it('calls fetch with the right properties when submitting data', async () => {
@@ -186,8 +185,7 @@ describe('CustomerForm', () => {
     render(<CustomerForm />);
     await act(async () => ReactTestUtils.Simulate.submit(form('customer')));
 
-    const errorNode = container.querySelector('.error');
-    expect(errorNode).not.toBeNull();
-    expect(errorNode.textContent).toMatch('error occured');
+    expect(element('.error')).not.toBeNull();
+    expect(element('.error').textContent).toMatch('error occured');
   });
 });

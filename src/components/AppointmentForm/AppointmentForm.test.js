@@ -4,11 +4,11 @@ import { createContainer } from '../../helpers/domManipulators';
 import { AppointmentForm } from './AppointmentForm';
 
 describe('AppointmentForm', () => {
-  let render, container, form, field, labelFor;
+  let render, container, form, field, labelFor, element;
   beforeEach(() => {
-    ({ render, container, form, field, labelFor, } = createContainer());
+    ({ render, container, form, field, labelFor, element } = createContainer());
   });
-  const timeSlotTable = () => container.querySelector('table#time-slots');
+  const timeSlotTable = () => element('table#time-slots');
 
   const itRendersAsASelectBox = fieldName => {
     return it('renders as a select box', () => {
@@ -45,17 +45,14 @@ describe('AppointmentForm', () => {
   const itRendersALabel = (fieldName, text) => {
     return it('renders a label', () => {
       render(<AppointmentForm />);
-      const label = container.querySelector(`label[for="${fieldName}"]`);
-      expect(label).not.toBeNull();
-      expect(label.textContent).toMatch(text);
+      expect(labelFor(fieldName)).not.toBeNull();
+      expect(labelFor(fieldName).textContent).toMatch(text);
     });
   };
   const itAssignsAnIdThatMatchesTheLabelId = fieldName => {
     return it('assigns an id that matches the label id', () => {
       render(<AppointmentForm />);
-      const label = container.querySelector(`label[for="${fieldName}"]`);
-      const input = label.querySelector('select');
-      expect(input.id).toEqual(label.id);
+      expect(labelFor(fieldName).id).toEqual(fieldName);
     });
   };
   const itSubmitsExistingValue = (fieldName, options, selectedOption) => {
