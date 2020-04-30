@@ -113,7 +113,7 @@ const TimeSlotsTable = ({
 export const AppointmentForm = ({
   selectableServices,
   selectedService,
-  onSubmit,
+  onSave,
   salonOpensAt,
   salonClosesAt,
   today,
@@ -145,8 +145,23 @@ export const AppointmentForm = ({
       })),
     []
   );
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const result = await window.fetch('/appointment', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(appointment)
+    });
+    
+    const customerWithId = await result.json();
+    onSave(customerWithId);
+  };
+
+
   return (
-    <form id="appointment" onSubmit={() => onSubmit(appointment)}>
+    <form id="appointment" onSubmit={handleSubmit}>
       <label htmlFor="service" id="service">
         Service
         <select
@@ -198,6 +213,7 @@ export const AppointmentForm = ({
  * Отрывок из книги: Daniel Irvine. «Mastering React Test-Driven Development». Apple Books.
  */
 AppointmentForm.defaultProps = {
+  onSave: () => {},
   salonOpensAt: 9,
   salonClosesAt: 19,
   today: new Date(),
