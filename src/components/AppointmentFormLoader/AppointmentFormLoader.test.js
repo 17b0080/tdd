@@ -54,5 +54,11 @@ describe('AppointmentFormLoader', () => {
       { avaliableTimeSlots, },
       expect.anything()
     )
+  });
+
+  it('passes props to children', async () => {
+    await renderAndWait(<AppointmentFormLoader testProps={123} />);
+
+    expect(AppointmentFormExports.AppointmentForm).toHaveBeenCalledWith(expect.objectContaining({ testProps: 123 }), expect.anything());
   })
 });
