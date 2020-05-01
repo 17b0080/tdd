@@ -6,6 +6,7 @@ import { AppointmentForm } from './AppointmentForm';
 
 describe('AppointmentForm', () => {
   let render, form, field, labelFor, element, elements, submit, change;
+  const customer = { id: 123 };
   beforeEach(() => {
     ({ render, form, field, labelFor, element, elements, submit, change } = createContainer());
     jest.spyOn(window, 'fetch').mockReturnValue(fetchResponseOk())
@@ -61,47 +62,13 @@ describe('AppointmentForm', () => {
       expect(labelFor(fieldName).id).toEqual(fieldName);
     });
   };
-  const itSubmitsExistingValue = (fieldName, options, selectedOption) => {
-    return it('submits existing value', async () => {
-      expect.hasAssertions();
-      const upperPropName =
-        fieldName.charAt(0).toUpperCase() + fieldName.substring(1);
-      const optionsPropName = `selectable${upperPropName}s`;
-      const selectedOptionPropName = `selected${upperPropName}`;
-      render(
-        <AppointmentForm
-          {...{
-            [optionsPropName]: options,
-            [selectedOptionPropName]: selectedOption
-          }}
-          onSubmit={({ [fieldName]: option }) => {
-            expect(option).toEqual(selectedOption);
-          }}
-        />
-      );
-      await submit(form('appointment'));
-    });
-  };
-  const itSubmitsNewValue = (fieldName, selectableOptions, value) => {
-    return it('submits new value', async () => {
-      expect.hasAssertions();
-      const upperPropName =
-        fieldName.charAt(0).toUpperCase() + fieldName.substring(1);
-      const optionsPropName = `selectable${upperPropName}s`;
-      render(
-        <AppointmentForm
-          {...{
-            [optionsPropName]: selectableOptions
-          }}
-          onSubmit={({ [fieldName]: option }) => {
-            expect(option).toEqual(value);
-          }}
-        />
-      );
-      await change(field('appointment', fieldName), withEvent(fieldName, value));
-      await submit(form('appointment'));
-    });
-  };
+
+  it('passes the customer id to fetch when submitting', async () => {
+    await render(<AppointmentForm customer={customer} />);
+    await submit(form('appointment'));
+
+    expect(requestBodyOf(window.fetch)).toMatchObject({ customer: customer.id });
+  })
 
   it('renders a form', () => {
     render(<AppointmentForm />);
@@ -119,26 +86,21 @@ describe('AppointmentForm', () => {
 
 
     it('submits existing value', async () => {
-      render(
-        <AppointmentForm
-          {...{
-            selectableServices: ['value'],
-            selectedService: 'value'
-          }}
-        />
-      );
+      render(<AppointmentForm
+        customer={customer}
+        selectableServices={['value']}
+        selectedService={'value'}
+      />);
       await submit(form('appointment'));
+
       expect(requestBodyOf(window.fetch)).toMatchObject({ service: 'value' });
     });
 
     it('submits new value', async () => {
-      render(
-        <AppointmentForm
-          {...{
-            selectableServices: ['value', 'newValue']
-          }}
-        />
-      );
+      render(<AppointmentForm
+        customer={customer}
+        selectableServices={['value', 'newValue']}
+      />);
       await change(field('appointment', 'service'), withEvent('service', 'newValue'));
       await submit(form('appointment'));
 
@@ -175,35 +137,33 @@ describe('AppointmentForm', () => {
     });
 
     it('submits existing value', async () => {
-      const selectedStylist = 'Jhon';
       render(
         <AppointmentForm
-          selectedStylist={selectedStylist}
-          onSubmit={({ stylist }) => {
-            expect(stylist).toEqual(selectedStylist);
-          }}
+          customer={customer}
+          selectedStylist={'Jhon'}
         />
       );
       await submit(form('appointment'));
+
+      expect(requestBodyOf(window.fetch)).toMatchObject({ stylist: 'Jhon' });
     });
     it('submits new value', async () => {
       const selectableStylists = [
         { name: 'Jhon', services: ['Cut'] },
         { name: 'Kyle', services: ['Blow-dry'] }
       ];
-      const selectedStylist = 'Jhon';
-      const stylistToSelect = 'Kyle';
+
       render(
         <AppointmentForm
+          customer={customer}
           selectableStylists={selectableStylists}
-          selectedStylist={selectedStylist}
-          onSubmit={({ stylist }) => {
-            expect(stylist).toEqual(stylistToSelect);
-          }}
+          selectedStylist={'Kyle'}
         />
       );
-      await change(field('appointment', 'stylist'), withEvent(null, stylistToSelect));
+      await change(field('appointment', 'stylist'), withEvent(null, 'Kyle'));
       await submit(form('appointment'));
+
+      expect(requestBodyOf(window.fetch)).toMatchObject({ stylist: 'Kyle' });
     });
   });
 
@@ -376,6 +336,7 @@ describe('AppointmentForm', () => {
         const checkedTimeSlot = today.setHours(9, 0, 0, 0);
         render(
           <AppointmentForm
+            customer={customer}
             selectableStylists={selectableStylists}
             selectedStylist={selectedStylist}
             selectedService={selectedService}
@@ -398,8 +359,10 @@ describe('AppointmentForm', () => {
         ];
         const checkedTimeSlot = today.setHours(9, 0, 0, 0);
         const newlySelectedTimeSlot = today.setHours(9, 30, 0, 0);
+        
         render(
           <AppointmentForm
+            customer={customer}
             selectableStylists={selectableStylists}
             selectedStylist={selectedStylist}
             selectedService={selectedService}
@@ -409,8 +372,9 @@ describe('AppointmentForm', () => {
           />
         );
         await change(startsAtField(1), withEvent(null, newlySelectedTimeSlot) );
-        expect(startsAtField(0).checked).not.toBeTruthy();
         await submit(form('appointment'));
+
+        expect(startsAtField(0).checked).not.toBeTruthy();
         expect(requestBodyOf(window.fetch)).toMatchObject({ startsAt: newlySelectedTimeSlot });
       });
     });

@@ -120,7 +120,8 @@ export const AppointmentForm = ({
   avaliableTimeSlots,
   checkedTimeSlot,
   selectableStylists,
-  selectedStylist
+  selectedStylist,
+  customer
 }) => {
   const [appointment, setAppointment] = useState({
     stylist: selectedStylist,
@@ -152,7 +153,10 @@ export const AppointmentForm = ({
       method: 'POST',
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(appointment)
+      body: JSON.stringify({
+        ...appointment,
+        customer: customer.id
+      })
     });
     
     const customerWithId = await result.json();
