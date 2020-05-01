@@ -33,6 +33,13 @@ describe('AppointmentFormLoader', () => {
         headers: { 'Content-Type': 'application/json' }
       })
     )
+  });
+
+  it('fetched data once', async () => {
+  await renderAndWait(<AppointmentFormLoader />);
+  await renderAndWait(<AppointmentFormLoader />);
+  
+  expect(window.fetch.mock.calls.length).toEqual(1);
   })
 
   it('initially passes no data to AppointmentForm', async () => {
