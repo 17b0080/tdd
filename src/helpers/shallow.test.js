@@ -1,5 +1,5 @@
 import React from 'react';
-import { createShallowRenderer, childrenOf } from './shallow';
+import { createShallowRenderer, childrenOf, type } from './shallow';
 
 describe('childrenOf', () => {
   it('returns no children', () => {
@@ -33,6 +33,47 @@ describe('createShallowRenderer', () => {
 
   it('return undefined if the child does not exist', () => {
     render(<TestComponent />);
+
     expect(child(0)).not.toBeDefined();
   });
+
+  it('returns child of rendered element', () => {
+    render(<TestComponent><p>A</p><p>B</p></TestComponent>);
+    
+    expect(child(1)).toEqual(<p>B</p>);
+  })
 });
+
+
+describe('elementsMatching', () => {
+  let render, elementsMatching;
+  beforeEach(() => {
+    ({ render, elementsMatching } = createShallowRenderer());
+  });
+
+  it('finds multiple direct children', () => {
+    render(<TestComponent><p>A</p><p>B</p></TestComponent>);
+
+    expect(elementsMatching(type('p'))).toEqual([<p>A</p>, <p>B</p>]);
+  });
+
+  it('finds indirect children', () => {
+    render(<TestComponent><div><p>A</p></div></TestComponent>);
+
+    expect(elementsMatching(type('b'))).toEqual([<p>A</p>]);
+  });
+});
+
+
+describe('elementMatching', () => {
+  let render, elementsMatching;
+  beforeEach(() => {
+    ({ render, elementsMatching } = createShallowRenderer());
+  });
+  
+  it('finds first direct child', () => {
+    render(<TestComponent><p>A</p><p>B</p></TestComponent>);
+
+    expect(elementsMatching(type('p'))).toEqual([<p>A</p>]);
+  });
+})
